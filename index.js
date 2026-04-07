@@ -20,12 +20,12 @@ async function connectToDB() {
 }
 connectToDB();
 
+// Routes
+const { users } = require("./routes/userRoute");
+app.use("/users", users);
+
 // Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
-
-// Routes
-const { users } = require("./routes/userRoute");
-app.use("/users", users);

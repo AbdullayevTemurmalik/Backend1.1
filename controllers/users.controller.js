@@ -6,10 +6,10 @@ const postRegister = async (req, res) => {
       username,
       password,
       firstname,
-      lastnamr,
+      lastname,
       birthday,
-      jinsi,
-      adress,
+      gender,
+      address,
       phone,
     } = req.body;
     const existingUser = await User.findOne({ username });
@@ -24,10 +24,11 @@ const postRegister = async (req, res) => {
     } else {
       const newUser = new User({
         username,
+        password,
         firstname,
         lastname,
         birthday,
-        jinsi,
+        gender,
         address,
         phone,
       });
@@ -46,6 +47,7 @@ const postRegister = async (req, res) => {
     });
   }
 };
+
 //  ----------------Get users-----------------
 const getUsers = async (req, res) => {
   try {
