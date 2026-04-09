@@ -5,11 +5,9 @@ require("dotenv").config();
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Database Connection
 async function connectToDB() {
   try {
     await connect(process.env.MONGO_URL);
@@ -20,11 +18,12 @@ async function connectToDB() {
 }
 connectToDB();
 
-// Routes
 const { users } = require("./routes/userRoute");
 app.use("/users", users);
 
-// Server
+const { Edu } = require("./routes/eduRoute");
+app.use("/edu", Edu);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
