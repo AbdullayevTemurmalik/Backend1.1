@@ -49,6 +49,7 @@ const postRegister = async (req, res) => {
 };
 
 //  ----------------Get users-----------------
+
 const getUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -67,7 +68,56 @@ const getUsers = async (req, res) => {
   }
 };
 
+//  ----------------Get users by id-----------------
+
+const getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User found", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+//  ----------------Delete user by id-----------------
+
+const deleteUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "Foydalanuvchi topilmadi",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Foydalanuvchi muvaffaqiyatli o'chirildi",
+      data: deletedUser,
+    });
+  } catch (error) {
+    console.error("Xato:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server xatosi: O'chirishda xatolik yuz berdi",
+    });
+  }
+};
+
 module.exports = {
   postRegister,
   getUsers,
+  getUserById,
+  deleteUserById,
 };
