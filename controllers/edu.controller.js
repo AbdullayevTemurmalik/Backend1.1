@@ -1,5 +1,7 @@
 const { Edu } = require("../model/eduSchema");
 
+//  ----------------Post edu-----------------
+
 const postEdu = async (req, res) => {
   try {
     const { city, street, center_name, branch, rating } = req.body;
@@ -34,22 +36,108 @@ const postEdu = async (req, res) => {
   }
 };
 
+//  ----------------Get edus-----------------
+
 const getEdus = async (req, res) => {
   try {
     const edus = await Edu.find();
     res.json({
       success: true,
-      message: "Barcha foydalanuvchilar royxati olingan",
+      message: "Barcha o'quv markazlari olingan",
       innerData: edus,
     });
   } catch (error) {
     console.error("Xato:", error);
     res.status(500).json({
       success: false,
-      message:
-        "Server xatosi: Foydalanuvchilar royxati olishda xatolik yuz berdi",
+      message: "Server xatosi: Ma'lumot olishda xatolik yuz berdi",
     });
   }
 };
 
-module.exports = { postEdu, getEdus };
+//  ----------------Get edu by id-----------------
+
+const getEduById = async (req, res) => {
+  try {
+    const eduId = req.params.id;
+
+    const edu = await Edu.findById(eduId);
+    if (!edu) {
+      return res.status(404).json({ message: "Edu not found" });
+    }
+
+    res.json({ message: "Edu found", edu });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+//  ----------------Delete edu by id-----------------
+
+const deleteEduById = async (req, res) => {
+  try {
+    const eduId = req.params.id;
+
+    const deletedEdu = await Edu.findByIdAndDelete(eduId);
+
+    if (!deletedEdu) {
+      return res.status(404).json({
+        success: false,
+        message: "O'quv markazi topilmadi",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "O'quv markazi muvaffaqiyatli o'chirildi",
+      data: deletedEdu,
+    });
+  } catch (error) {
+    console.error("Xato:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server xatosi: O'chirishda xatolik yuz berdi",
+    });
+  }
+};
+
+//  ----------------Update edu by id-----------------
+
+const updateEdu = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { city, street, center_name, branch, rating } = req.body;
+
+    const updatedEdu = await Edu.findByIdAndUpdate(
+      id,
+      { city, street, center_name, branch, rating },
+      { new: true },
+    );
+    if (!updatedEdu) {
+      return res.status(404).json({
+        success: false,
+        message: "Edu not found!",
+      });
+    }
+    res.json({
+      success: true,
+      message: "Edu updated successfully!",
+      data: updatedEdu,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error: Failed to update edu",
+    });
+  }
+};
+
+module.exports = {
+  postEdu,
+  getEdus,
+  getEduById,
+  deleteEduById,
+  updateEdu,
+};
