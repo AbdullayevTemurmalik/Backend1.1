@@ -147,10 +147,52 @@ const updateUser = async (req, res) => {
   }
 };
 
+// ----------------Search users-----------------
+
+const searchUsers = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Qidiruv so'rovi noto'g'ri kiritildi",
+      });
+    }
+
+    const result = await User.find({
+      $or: [
+        { username: { $regex: query, $options: "i" } },
+        { firstname: { $regex: query, $options: "i" } },
+        { lastname: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Bunday foydalanuvchi topilmadi",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    console.error("Qidiruvda xatolik:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Serverda xatolik yuz berdi",
+    });
+  }
+};
+
 module.exports = {
   postRegister,
   getUsers,
   getUserById,
   deleteUserById,
   updateUser,
+  searchUsers,
 };

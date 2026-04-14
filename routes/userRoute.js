@@ -6,13 +6,13 @@ const {
   getUserById,
   deleteUserById,
   updateUser,
+  searchUsers,
 } = require("../controllers/users.controller");
 
 const {
   registerValidationSchema,
   updateValidationSchema,
 } = require("../validation/userValidation");
-const { Schema } = require("mongoose");
 
 const validationSchema = (Schema) => (req, res, next) => {
   const validationResult = Schema.validate(req.body);
@@ -31,6 +31,7 @@ users.post(
   postRegister,
 );
 users.get("/all", getUsers);
+users.get("/search", searchUsers);
 users.get("/:id", getUserById);
 users.delete("/:id", deleteUserById);
 users.put("/:id", validationSchema(updateValidationSchema), updateUser);

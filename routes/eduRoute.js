@@ -6,6 +6,7 @@ const {
   getEduById,
   deleteEduById,
   updateEdu,
+  searchEdus,
 } = require("../controllers/edu.controller");
 
 const {
@@ -26,6 +27,7 @@ const validationSchema = (Schema) => (req, res, next) => {
 
 Edu.post("/create", validationSchema(registerEduValidationSchema), postEdu);
 Edu.get("/all", getEdus);
+Edu.get("/search", searchEdus);
 Edu.get("/:id", getEduById);
 Edu.delete("/:id", deleteEduById);
 Edu.put("/:id", validationSchema(updateEduValidationSchema), updateEdu);
