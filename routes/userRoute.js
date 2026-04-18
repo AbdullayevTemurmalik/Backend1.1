@@ -7,6 +7,7 @@ const {
   deleteUserById,
   updateUser,
   searchUsers,
+  postLogin,
 } = require("../controllers/users.controller");
 
 const {
@@ -30,6 +31,7 @@ users.post(
   validationSchema(registerValidationSchema),
   postRegister,
 );
+users.post("/login", postLogin);
 users.get("/all", getUsers);
 users.get("/search", searchUsers);
 users.get("/:id", getUserById);

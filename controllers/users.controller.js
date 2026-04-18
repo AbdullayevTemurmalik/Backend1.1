@@ -197,6 +197,41 @@ const searchUsers = async (req, res) => {
   }
 };
 
+// ----------------Login-----------------
+
+const postLogin = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    console.log(user);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Username is invalid",
+      });
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Username or Password is invalid",
+      });
+    }
+
+    const token = jwt.sign({ username: user.username }, "secret");
+    return res.json({
+      message: "Token",
+      token: token,
+    });
+  } catch (error) {
+    console.error("Error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error: An error occured during the login process",
+    });
+  }
+};
+
 module.exports = {
   postRegister,
   getUsers,
@@ -204,4 +239,5 @@ module.exports = {
   deleteUserById,
   updateUser,
   searchUsers,
+  postLogin,
 };
