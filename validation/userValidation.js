@@ -1,44 +1,55 @@
-const joi = require("joi");
+const Joi = require("joi");
 
-const registerValidationSchema = joi.object({
-  username: joi.string().required().trim().min(3).max(30),
+const phoneRegex = /^\+998\d{9}$/;
 
-  password: joi
-    .string()
-    .required()
+const passwordRegex =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+
+const registerValidationSchema = Joi.object({
+  username: Joi.string().trim().min(3).max(30).required(),
+
+  password: Joi.string()
     .trim()
     .min(8)
     .max(30)
-    .pattern(
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/,
-    ),
+    .pattern(passwordRegex)
+    .required(),
 
-  firstname: joi.string(),
-  lastname: joi.string(),
-  birthday: joi.date(),
-  gender: joi.string(),
-  address: joi.string(),
-  phone: joi.string().pattern(/^\+998\d{9}$/),
+  firstname: Joi.string().trim().required(),
+  lastname: Joi.string().trim().required(),
+
+  birthday: Joi.date().required(),
+
+  gender: Joi.string().valid("male", "female").required(),
+
+  address: Joi.string().trim().required(),
+
+  phones: Joi.string().pattern(phoneRegex).required(),
+
+  car_id: Joi.string().hex().length(24).allow(null, ""),
+  house_id: Joi.string().hex().length(24).allow(null, ""),
+  edu_id: Joi.string().hex().length(24).allow(null, ""),
 });
 
-const updateValidationSchema = joi.object({
-  username: joi.string().trim().min(3).max(30),
+const updateValidationSchema = Joi.object({
+  username: Joi.string().trim().min(3).max(30),
 
-  password: joi
-    .string()
-    .trim()
-    .min(8)
-    .max(30)
-    .pattern(
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/,
-    ),
+  password: Joi.string().trim().min(8).max(30).pattern(passwordRegex),
 
-  firstname: joi.string(),
-  lastname: joi.string(),
-  birthday: joi.date(),
-  gender: joi.string(),
-  address: joi.string(),
-  phone: joi.string().pattern(/^\+998\d{9}$/),
+  firstname: Joi.string().trim(),
+  lastname: Joi.string().trim(),
+
+  birthday: Joi.date(),
+
+  gender: Joi.string().valid("male", "female"),
+
+  address: Joi.string().trim(),
+
+  phones: Joi.string().pattern(phoneRegex),
+
+  car_id: Joi.string().hex().length(24).allow(null, ""),
+  house_id: Joi.string().hex().length(24).allow(null, ""),
+  edu_id: Joi.string().hex().length(24).allow(null, ""),
 });
 
 module.exports = {
