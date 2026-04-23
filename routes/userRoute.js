@@ -196,7 +196,81 @@ users.get("/searchUser", searchUsers);
  */
 users.get("/:id", getUserById);
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: ID bo'yicha foydalanuvchini o'chirish
+ *     tags: [Users]
+ *     description: foydalanuvchini ID bo'yicha o'chirish
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: Foydalanuvchini o'chirish uchun ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Foydalanuvchi muvaffaqiyatli o'chirildi
+ *       404:
+ *         description: Foydalanuvchi topilmadi
+ *       500:
+ *         description: Ichki server xatoligi
+ */
 users.delete("/:id", deleteUserById);
-users.put("/:id", validationSchema(updateValidationSchema), updateUser);
+
+/**
+ * @swagger
+ * /users/updateUserById/{id}:
+ *   put:
+ *     summary: Foydalanuvchini yangilash
+ *     tags: [Users]
+ *     description: Foydalanuvchi ma'lumotlarini yangilash (masalan, username, email, telefon va boshqalar)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: Foydalanuvchini olish uchun ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: Yangi username
+ *               password:
+ *                 type: string
+ *                 description: Yangi parol
+ *               lastname:
+ *                 type: string
+ *                 description: Yangi familiya
+ *               address:
+ *                 type: string
+ *                 description: Yangi manzil
+ *               phone:
+ *                 type: number
+ *                 description: Yangi telefon raqam
+ *     responses:
+ *       200:
+ *         description: Foydalanuvchi muvaffaqiyatli yangilandi
+ *       400:
+ *         description: Yomon so'rov, validatsiya xatosi
+ *       404:
+ *         description: Foydalanuvchi topilmadi
+ *       500:
+ *         description: Ichki server xatosi
+ */
+
+users.put(
+  "/updateUserById/:id",
+  validationSchema(updateValidationSchema),
+  updateUser,
+);
 
 module.exports = { users };
