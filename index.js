@@ -52,6 +52,9 @@ app.use("/house", House);
 const { CarRoute } = require("./routes/carRoute");
 app.use("/cars", CarRoute);
 
+const { BookRoute } = require("./routes/bookRoute");
+app.use("/book", BookRoute);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
