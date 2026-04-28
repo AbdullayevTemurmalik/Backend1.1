@@ -2,6 +2,8 @@ const { User } = require("../model/userSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// ----------------Register-----------------
+
 const postRegister = async (req, res) => {
   try {
     const {
@@ -13,6 +15,10 @@ const postRegister = async (req, res) => {
       gender,
       address,
       phone,
+      car_id,
+      house_id,
+      edu_id,
+      book_id,
     } = req.body;
     const existingUser = await User.findOne({ username });
 
@@ -34,6 +40,10 @@ const postRegister = async (req, res) => {
         gender,
         address,
         phone,
+        car_id,
+        house_id,
+        edu_id,
+        book_id,
       });
       await newUser.save();
       return res.status(201).json({
@@ -77,7 +87,12 @@ const getUserById = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate([
+      "car_id",
+      "house_id",
+      "edu_id",
+      "book_id",
+    ]);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -123,7 +138,17 @@ const deleteUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { username, lastname, phone, address, password } = req.body;
+    const {
+      username,
+      lastname,
+      phone,
+      address,
+      password,
+      car_id,
+      house_id,
+      edu_id,
+      book_id,
+    } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
@@ -133,6 +158,10 @@ const updateUser = async (req, res) => {
         phone,
         address,
         password: await bcrypt.hash(password, 10),
+        car_id,
+        house_id,
+        edu_id,
+        book_id,
       },
       { new: true },
     );

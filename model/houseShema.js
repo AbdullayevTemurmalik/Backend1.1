@@ -9,6 +9,6 @@ const houseScheme = new Schema({
   location: { type: String, required: true },
 });
 
-const House = model("house", houseScheme);
+const House = model("House", houseScheme);
 
 module.exports = { House };
